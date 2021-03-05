@@ -10,10 +10,6 @@ import os
 
 ### Global Variables ###
 
-message1 = "Sorry, I only accept Numerical Inputs"
-message2 = "Please choose a Number from the above changeme"
-message3 = "Please choose a jump range greater than 0"
-
 ### Functions ###
 
 ### Main ###
@@ -236,7 +232,10 @@ class StartPage(Frame):
                             element = start.find_all('a', text=True)[0]
                             pagecontents = str(element.text)
                         else:
-                            pagecontents = str(StartPage.data2[(characters)]['character_id'])
+                            characterName = requests.get("https://esi.evetech.net/latest/characters/" + str(StartPage.data2[(characters)]['character_id']) + "/?datasource=tranquility")
+                            nameData = characterName.json()
+
+                            pagecontents = nameData['name']
 
                         url2 = "https://zkillboard.com/item/" + str(StartPage.data2[(characters)]['type_id'])
 
@@ -313,12 +312,41 @@ class StartPage(Frame):
         Character = Button(self, width=20, text="4. Get mining Data", command=miners)
         Character.grid(row=12, column=0, padx=10, pady=10)
 
+        WithoutJ = Button(self, width=20, text="Character Name Finder", command=lambda:controller.show_frame(LiveFeed))
+        WithoutJ.grid(row=13, column=0, padx=10, pady=10)
+
 class LiveFeed(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
 
+        def getChar():
+                characterName = requests.get("https://esi.evetech.net/latest/characters/" + str(inputCC3.get()) + "/?datasource=tranquility")
+                nameData = characterName.json()
+
+                name = nameData['name']
+
+                print(name + " " + str(inputCC3.get()))
+
+                inputCC4 = Entry(self, width=20, text="", font=('Helvetica',10))
+                inputCC4.grid(row=4, column=0, padx=10, pady=0) 
+
+                inputCC4.insert(0, name)
+
+
+        label = Label(self, width=50, text="Chracter ID Finder")
+        label.grid(row=1, column=0, padx=10, pady=10)
+
+        label = Label(self, text="Please Input The Character ID")
+        label.grid(row=2, column=0, padx=10, pady=10)
+
+        inputCC3 = Entry(self, font=('Helvetica',10))
+        inputCC3.grid(row=3, column=0, padx=10, pady=0) 
+
+        Character = Button(self, width=20, text="Submit", command=getChar)
+        Character.grid(row=5, column=0, padx=10, pady=10)
+
         back = Button(self, width=20, text="Back", command=lambda:controller.show_frame(StartPage))
-        back.grid(row=5, column=0, padx=10, pady=10)
+        back.grid(row=6, column=0, padx=10, pady=10)
 
 
 app = App()
