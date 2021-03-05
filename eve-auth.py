@@ -221,29 +221,16 @@ class StartPage(Frame):
                 for x in StartPage.data2:
                     try:
                         self.update()
-                        url = "https://zkillboard.com/character/" + str(StartPage.data2[(characters)]['character_id'])
-                        page = requests.get(url)
-                        from bs4 import BeautifulSoup
-                        soup = BeautifulSoup(page.content, 'html.parser', on_duplicate_attribute='ignore')
 
-                        start = soup.find('th', text='Character:')
-                        if start != None:
-                            start = soup.find('th', text='Character:').parent
-                            element = start.find_all('a', text=True)[0]
-                            pagecontents = str(element.text)
-                        else:
-                            characterName = requests.get("https://esi.evetech.net/latest/characters/" + str(StartPage.data2[(characters)]['character_id']) + "/?datasource=tranquility")
-                            nameData = characterName.json()
+                        characterName = requests.get("https://esi.evetech.net/latest/characters/" + str(StartPage.data2[(characters)]['character_id']) + "/?datasource=tranquility")
+                        nameData = characterName.json()
 
-                            pagecontents = nameData['name']
+                        pagecontents = nameData['name']
 
-                        url2 = "https://zkillboard.com/item/" + str(StartPage.data2[(characters)]['type_id'])
+                        characterName = requests.get("https://esi.evetech.net/latest/universe/types/" + str(StartPage.data2[(characters)]['type_id']) + "/?datasource=tranquility")
+                        OreData = characterName.json()
 
-                        page2 = requests.get(url2)
-                        from bs4 import BeautifulSoup
-                        soup2 = BeautifulSoup(page2.content, 'html.parser', on_duplicate_attribute='ignore')
-
-                        start2 = soup2.find('h2').text
+                        pagecontents2 = OreData['name']
 
                         case2 = placedrt2["Character"] = pagecontents
                         case_changeme1.append(case2)
@@ -254,7 +241,7 @@ class StartPage(Frame):
                         case6 = placedrt2["Quantity"] = StartPage.data2[(characters)]['quantity']
                         case_changeme3.append(case6)
 
-                        case8 = placedrt2["Item"] = str(start2.strip())
+                        case8 = placedrt2["Item"] = pagecontents2
                         case_changeme4.append(case8)
 
                         case9 = placedrt2["ItemID"] = StartPage.data2[(characters)]['type_id']
