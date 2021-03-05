@@ -285,22 +285,22 @@ class StartPage(Frame):
         Character.grid(row=5, column=0, padx=10, pady=10)
 
         label = Label(self, text="Please Input Your Corperation ID")
-        label.grid(row=6, column=0, padx=10, pady=10)
+        label.grid(row=7, column=0, padx=10, pady=10)
 
         inputCC2 = Entry(self, font=('Helvetica',10))
-        inputCC2.grid(row=7, column=0, padx=10, pady=0) 
+        inputCC2.grid(row=8, column=0, padx=10, pady=0) 
 
         Character = Button(self, width=20, text="3. Get Observers", command=observersnew)
-        Character.grid(row=8, column=0, padx=10, pady=10)
+        Character.grid(row=9, column=0, padx=10, pady=10)
 
         label = Label(self, wraplength=250, text="Please Note the application will appear to stop responding while it gets the information \n\n Please Find the file on your Desktop after you 'Get mining Data'")
-        label.grid(row=11, column=0, padx=10, pady=10)
+        label.grid(row=12, column=0, padx=10, pady=10)
 
         Character = Button(self, width=20, text="4. Get mining Data", command=miners)
-        Character.grid(row=12, column=0, padx=10, pady=10)
+        Character.grid(row=13, column=0, padx=10, pady=10)
 
-        WithoutJ = Button(self, width=20, text="Character Name Finder", command=lambda:controller.show_frame(LiveFeed))
-        WithoutJ.grid(row=13, column=0, padx=10, pady=10)
+        WithoutJ = Button(self, width=20, text="Corp ID Finder", command=lambda:controller.show_frame(LiveFeed))
+        WithoutJ.grid(row=6, column=0, padx=10, pady=10)
 
 class LiveFeed(Frame):
     def __init__(self, parent, controller):
@@ -312,28 +312,60 @@ class LiveFeed(Frame):
 
                 name = nameData['name']
 
-                print(name + " " + str(inputCC3.get()))
-
                 inputCC4 = Entry(self, width=20, text="", font=('Helvetica',10))
-                inputCC4.grid(row=4, column=0, padx=10, pady=0) 
+                inputCC4.grid(row=9, column=0, padx=10, pady=0) 
 
                 inputCC4.insert(0, name)
 
+        def getCorp():
 
-        label = Label(self, width=50, text="Chracter ID Finder")
-        label.grid(row=1, column=0, padx=10, pady=10)
+                url = "https://zkillboard.com/corporation/" + str(inputCC5.get())
+                print(url)
+
+                page = requests.get(url)
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(page.content, 'html.parser', on_duplicate_attribute='ignore')
+
+                element = soup.find_all('a')[38]
+                data1 = (element.get('href'))
+
+                data2 = data1.replace('/corporation/', '')
+                Corpdata = data2.replace('/', '')
+
+                print(Corpdata)
+
+                inputCC6 = Entry(self, width=20, text="", font=('Helvetica',10))
+                inputCC6.grid(row=4, column=0, padx=10, pady=0) 
+
+                inputCC6.insert(0, Corpdata)
+
+
+        label = Label(self, width=50, text="Chracter Name Finder")
+        label.grid(row=6, column=0, padx=10, pady=10)
 
         label = Label(self, text="Please Input The Character ID")
-        label.grid(row=2, column=0, padx=10, pady=10)
+        label.grid(row=7, column=0, padx=10, pady=10)
 
         inputCC3 = Entry(self, font=('Helvetica',10))
-        inputCC3.grid(row=3, column=0, padx=10, pady=0) 
+        inputCC3.grid(row=8, column=0, padx=10, pady=0) 
 
         Character = Button(self, width=20, text="Submit", command=getChar)
+        Character.grid(row=10, column=0, padx=10, pady=10)
+
+        label = Label(self, width=50, text="Corp ID Finder")
+        label.grid(row=1, column=0, padx=10, pady=10)
+
+        label = Label(self, text="Please Input The Corperation Name")
+        label.grid(row=2, column=0, padx=10, pady=10)
+
+        inputCC5 = Entry(self, font=('Helvetica',10))
+        inputCC5.grid(row=3, column=0, padx=10, pady=0) 
+
+        Character = Button(self, width=20, text="Submit", command=getCorp)
         Character.grid(row=5, column=0, padx=10, pady=10)
 
         back = Button(self, width=20, text="Back", command=lambda:controller.show_frame(StartPage))
-        back.grid(row=6, column=0, padx=10, pady=10)
+        back.grid(row=11, column=0, padx=10, pady=10)
 
 
 app = App()
